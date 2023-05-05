@@ -28,6 +28,7 @@ else
 endif
 
 check-target-platform:
+  TARGETPLATFORM = linux/amd64
 # Handle target platform variants.
 # arch command on OS X reports "i386" for Intel CPUs regardless of bitness
 ifeq ($(TARGETPLATFORM), $(filter $(TARGETPLATFORM), x86_64 x64 amd64 i386 linux/amd64))
