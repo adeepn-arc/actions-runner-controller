@@ -116,6 +116,17 @@ RUN apt-get update -y \
     zsync \
     && rm -rf /var/lib/apt/lists/*
 
+# Add yq
+RUN if [ "${BUILD_ARCH}" = "armhf" ] || [ "${BUILD_ARCH}" = "armv7" ]; then \
+        wget -q -O /usr/bin/yq "https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_arm"; \
+    elif [ "${BUILD_ARCH}" = "aarch64" ]; then \
+        wget -q -O /usr/bin/yq "https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_arm64"; \
+    elif [ "${BUILD_ARCH}" = "i386" ]; then \
+        wget -q -O /usr/bin/yq "https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_386"; \
+    else [ "${BUILD_ARCH}" = "amd64" ]; then \
+        wget -q -O /usr/bin/yq "https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_amd64"; \
+    fi
+
 # Runner user
 RUN adduser --disabled-password --gecos "" --uid $RUNNER_USER_UID runner
 
