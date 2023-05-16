@@ -10,6 +10,7 @@ ARG DOCKER_COMPOSE_VERSION=v2.16.0
 ARG DUMB_INIT_VERSION=1.2.5
 ARG RUNNER_USER_UID=1001
 ARG DOCKER_GROUP_GID=121
+ARG YQ_VERSION=v4.33.3
 
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -y \
@@ -119,9 +120,11 @@ RUN if [ "${BUILD_ARCH}" = "armhf" ] || [ "${BUILD_ARCH}" = "armv7" ]; then \
         wget -q -O /usr/bin/yq "https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_arm64"; \
     elif [ "${BUILD_ARCH}" = "i386" ]; then \
         wget -q -O /usr/bin/yq "https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_386"; \
-    else [ "${BUILD_ARCH}" = "amd64" ]; then \
+    else \
         wget -q -O /usr/bin/yq "https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_amd64"; \
-    fi
+    fi \
+    && chmod +x /usr/bin/yq
+
 
 # Runner user
 RUN adduser --disabled-password --gecos "" --uid $RUNNER_USER_UID runner \
