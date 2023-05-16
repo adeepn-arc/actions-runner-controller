@@ -13,7 +13,7 @@ jobs:
   doupdate:
     name: Sync repository with upstream
     runs-on: ubuntu-latest
-    if: ${{ github.repository_owner == 'adeepn' }}
+    if: ${{ github.repository_owner == 'adeepn-arc' }}
     permissions:
       contents: write
       packages: write
