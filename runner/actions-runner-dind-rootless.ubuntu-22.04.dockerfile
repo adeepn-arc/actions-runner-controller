@@ -8,6 +8,7 @@ ENV CHANNEL=stable
 ARG DOCKER_COMPOSE_VERSION=v2.20.0
 ARG DUMB_INIT_VERSION=1.2.5
 ARG RUNNER_USER_UID=1001
+ARG YQ_VERSION=v4.35.1
 
 # Other arguments
 ARG DEBUG=false
@@ -118,6 +119,19 @@ RUN apt-get update -y \
 # Download latest git-lfs version
 RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
     apt-get install -y --no-install-recommends git-lfs
+
+# Add yq
+RUN if [ "${BUILD_ARCH}" = "armhf" ] || [ "${BUILD_ARCH}" = "armv7" ]; then \
+        wget -q -O /usr/bin/yq "https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_arm"; \
+    elif [ "${BUILD_ARCH}" = "aarch64" ]; then \
+        wget -q -O /usr/bin/yq "https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_arm64"; \
+    elif [ "${BUILD_ARCH}" = "i386" ]; then \
+        wget -q -O /usr/bin/yq "https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_386"; \
+    else \
+        wget -q -O /usr/bin/yq "https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_amd64"; \
+    fi \
+    && chmod +x /usr/bin/yq
+
 
 # Runner user
 RUN adduser --disabled-password --gecos "" --uid $RUNNER_USER_UID runner
